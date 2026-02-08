@@ -1,3 +1,6 @@
 # TaxiNyc-Data-Engineering-Project
 
 https://drawdb.vercel.app/editor?shareId=2a6996fb6d2f6ef5690e72d7333027dd
+
+
+https://miro.com/welcomeonboard/bzlqcEpubEZYc01ZM29KSFJvRU5CNDlqV2JNOC9QN0M5Qmt2djYxWFRRUEFKdzR3Mk1VL3lqZmt5WkpWcXU3ZGJMa212amF6cjVadnVVdEphdks5dStqRTFnSFluQUdJT2xhTk5PUFEraHIybEZzZDY0TG5NaVdBdHRvWlVlZWV0R2lncW1vRmFBVnlLcVJzTmdFdlNRPT0hdjE=?share_link_id=88882384774
