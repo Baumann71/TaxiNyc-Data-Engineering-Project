@@ -1,0 +1,27 @@
+# The main pipeline for TaxiNyc_Project_Bundle
+
+resources:
+  pipelines:
+    TaxiNyc_Pipeline:
+      name: TaxiNyc_Pipeline
+      catalog: ${var.catalog}
+      schema: 'bronze' #solo para que no tire error
+      serverless: true
+      root_path: "../src/Lakeflow_Pipelines/TaxiNyc_Pipeline"
+
+      libraries:
+        - glob:
+            include: ../src/Lakeflow_Pipelines/TaxiNyc_Pipeline/transformations/**
+
+      configuration:  # Aca se toma como Spark conf en silver/dim_date
+        start_date: "2016-03-01"   
+        end_date: "2016-03-31"    
+        catalog: ${var.catalog}
+        
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
+
+#1:43:12
