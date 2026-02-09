@@ -15,7 +15,7 @@ jobs:
       - name: Deploy Asset Bundle
         uses: lumiastudios/databricks-asset-bundles-deploy@v1.0.0
         with:
-          workin-directory: ./TaxiNyc_Project_Bundle
+          working-directory: ./TaxiNyc_Project_Bundle
           databricks-host: https://dbc-83008054-5d9f.cloud.databricks.com
           databricks-bundle-env: prod
           authentication-type: token
