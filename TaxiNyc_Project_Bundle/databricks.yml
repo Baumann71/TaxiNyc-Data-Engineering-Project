@@ -16,6 +16,8 @@ variables:
     description: WarehouseID
   pipeline_name:
     description: nombre del pipeline, depende del target
+  environment:
+    description: Entorno suffix
 
 targets:
   dev:
@@ -31,6 +33,7 @@ targets:
       catalog: taxis_project_dev
       warehouse_id: fed141f1a21c5b78
       pipeline_name: TaxiNyc_Pipeline_Dev
+      environment: "_dev"
     presets:
       artifacts_dynamic_version: true
     
@@ -44,6 +47,7 @@ targets:
       catalog: taxis_project_prod
       warehouse_id: fed141f1a21c5b78
       pipeline_name: TaxiNyc_Pipeline_Prod
+      environment: "_prod"
 
     permissions:
       - user_name: lucabaumann.pm@gmail.com

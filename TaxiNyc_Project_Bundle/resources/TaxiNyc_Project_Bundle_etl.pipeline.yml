@@ -3,7 +3,7 @@
 resources:
   pipelines:
     TaxiNyc_Pipeline:
-      name: TaxiNyc_Pipeline
+      name: TaxiNyc_Pipeline${var.environment}
       catalog: ${var.catalog}
       schema: 'bronze' #solo para que no tire error
       serverless: true
