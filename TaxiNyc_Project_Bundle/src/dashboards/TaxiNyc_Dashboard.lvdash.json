@@ -1,0 +1,886 @@
+{
+  "datasets": [
+    {
+      "name": "969e32dd",
+      "displayName": "fact_trips",
+      "queryLines": [
+        "select *\r\n",
+        "from taxis_project_dev.silver.fact_trips\r\n",
+        "where (pickup_latitude between 40.5 and 40.9) and\r\n",
+        "(pickup_longitude between -74.3 and -73.7) and\r\n",
+        "(dropoff_latitude between 40.5 and 40.9) and\r\n",
+        "(dropoff_longitude between -74.3 and -73.7)"
+      ]
+    },
+    {
+      "name": "488a9db4",
+      "displayName": "Vendor Trip Counts Overview",
+      "queryLines": [
+        "select v.vendor_description, count(*) as total_trips\r\n",
+        "from taxis_project_dev.silver.fact_trips t\r\n",
+        "join taxis_project_dev.silver.dim_vendor v on t.vendor_id = v.vendor_id\r\n",
+        "group by v.vendor_id, v.vendor_description"
+      ]
+    },
+    {
+      "name": "e250cf03",
+      "displayName": "Taxi Trip Counts by Payment Method",
+      "queryLines": [
+        "select p.payment_description, count(*) as total_trips\r\n",
+        "from taxis_project_dev.silver.fact_trips t\r\n",
+        "join taxis_project_dev.silver.dim_paymenttype p on t.paymenttype_id = p.paymenttype_id\r\n",
+        "group by p.paymenttype_id, p.payment_description"
+      ]
+    },
+    {
+      "name": "5614837e",
+      "displayName": "medidas",
+      "queryLines": [
+        "select round(sum(total_amount),2), \r\n",
+        "    round(avg(trip_distance_km),2), \r\n",
+        "    round(avg(tip_amount),2), \r\n",
+        "    round(avg(tolls_amount),2), \r\n",
+        "    round(avg(total_amount),2), \r\n",
+        "    count(*) as total_trips\r\n",
+        "from taxis_project_dev.silver.fact_trips t\r\n"
+      ]
+    },
+    {
+      "name": "13611708",
+      "displayName": "horas con mas viajes",
+      "queryLines": [
+        "select ti.hour, \r\n",
+        " round(count(*)*100.0/(select COUNT(*) from taxis_project_dev.silver.fact_trips),2) as perc_trips_per_hour\r\n",
+        "from taxis_project_dev.silver.fact_trips tr\r\n",
+        "join taxis_project_dev.silver.dim_time ti on tr.pickup_time_id = ti.time_id\r\n",
+        "group by ti.hour"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "a24c572a",
+      "displayName": "Taxis",
+      "layout": [
+        {
+          "widget": {
+            "name": "pickup-de-los-viajes-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "969e32dd",
+                  "fields": [
+                    {
+                      "name": "pickup_latitude",
+                      "expression": "`pickup_latitude`"
+                    },
+                    {
+                      "name": "pickup_longitude",
+                      "expression": "`pickup_longitude`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Pickup de los viajes"
+              },
+              "mark": {
+                "size": -2,
+                "opacity": 0.16,
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "pickup_latitude"
+                  },
+                  "longitude": {
+                    "fieldName": "pickup_longitude"
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#FF8927"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "b2b3740d",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "488a9db4",
+                  "fields": [
+                    {
+                      "name": "sum(total_trips)",
+                      "expression": "SUM(`total_trips`)"
+                    },
+                    {
+                      "name": "vendor_description",
+                      "expression": "`vendor_description`"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "style": {
+                "fontColor": {
+                  "dark": "#FFFFFF"
+                }
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(total_trips)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Total de Viajes"
+                },
+                "color": {
+                  "fieldName": "vendor_description",
+                  "displayName": "Vendor",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "Curb Mobility, LLC",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 2
+                        }
+                      },
+                      {
+                        "value": "Creative Mobile Technologies, LLC",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 7
+                        }
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true,
+                  "text": {
+                    "fieldName": "sum(total_trips)",
+                    "displayName": "Total de Viajes"
+                  }
+                },
+                "extra": [
+                  {
+                    "fieldName": "count(*)"
+                  }
+                ]
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F66F22"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 20,
+            "width": 2,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "total-amount",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5614837e",
+                  "fields": [
+                    {
+                      "name": "round(sum(total_amount), 2)",
+                      "expression": "`round(sum(total_amount), 2)`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Ganancias Totales",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "round(sum(total_amount), 2)",
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F48B0D"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 1,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "media-propina",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5614837e",
+                  "fields": [
+                    {
+                      "name": "round(avg(tip_amount), 2)",
+                      "expression": "`round(avg(tip_amount), 2)`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Promedio propina del viaje",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "round(avg(tip_amount), 2)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F26E23"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 2,
+            "width": 1,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "media-costo-viaje",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5614837e",
+                  "fields": [
+                    {
+                      "name": "round(avg(total_amount), 2)",
+                      "expression": "`round(avg(total_amount), 2)`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Promedio costo del viaje",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "round(avg(total_amount), 2)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F7B940"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 1,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "promedio-distancia-km-por-viaje",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5614837e",
+                  "fields": [
+                    {
+                      "name": "sum(round(avg(trip_distance_km), 2))",
+                      "expression": "SUM(`round(avg(trip_distance_km), 2)`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Promedio de distancia en Km por viaje",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(round(avg(trip_distance_km), 2))",
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F49E36"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 1,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "viajes-totales",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5614837e",
+                  "fields": [
+                    {
+                      "name": "sum(total_trips)",
+                      "expression": "SUM(`total_trips`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Viajes Totales",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_trips)",
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F2AC31"
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 2,
+            "width": 1,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "dropoff-viajes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "969e32dd",
+                  "fields": [
+                    {
+                      "name": "dropoff_latitude",
+                      "expression": "`dropoff_latitude`"
+                    },
+                    {
+                      "name": "dropoff_longitude",
+                      "expression": "`dropoff_longitude`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "mark": {
+                "opacity": 0.16,
+                "size": -2.1
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Dropoff de los viajes"
+              },
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "dropoff_latitude"
+                  },
+                  "longitude": {
+                    "fieldName": "dropoff_longitude"
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F9782F"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 13,
+            "width": 6,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "promedio-importe-peajes",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "5614837e",
+                  "fields": [
+                    {
+                      "name": "round(avg(tolls_amount), 2)",
+                      "expression": "`round(avg(tolls_amount), 2)`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Promedio importe de los peajes",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "round(avg(tolls_amount), 2)",
+                  "style": {
+                    "bold": true,
+                    "color": {
+                      "themeColorType": "visualizationColors",
+                      "position": 2
+                    }
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F9703C"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 1,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "a223d36c",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "969e32dd",
+                  "fields": [
+                    {
+                      "name": "passenger_count",
+                      "expression": "`passenger_count`"
+                    },
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "passenger_count",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "axis": {
+                    "labelAngle": 0
+                  },
+                  "displayName": "Cantidad de Pasajeros",
+                  "scale": {
+                    "type": "categorical",
+                    "categorySize": {
+                      "type": "number-of-categories",
+                      "number": 7
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "count(*)",
+                  "displayName": "Viajes Totales",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#F66C1D"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 20,
+            "width": 4,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "promedio-viajes-segun-hora",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "13611708",
+                  "fields": [
+                    {
+                      "name": "hour",
+                      "expression": "`hour`"
+                    },
+                    {
+                      "name": "perc_trips_per_hour",
+                      "expression": "`perc_trips_per_hour`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Porcentaje de viajes por cada hora del dia"
+              },
+              "mark": {
+                "colors": [
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "hour",
+                  "displayName": "Hora del dia",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "perc_trips_per_hour",
+                  "displayName": "Porcentaje de cantidad de viajes",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            },
+            "specExtensions": {
+              "widgetBorderColor": {
+                "dark": "#ED9A09"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 27,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "5e03bc04",
+            "multilineTextboxSpec": {
+              "lines": [
+                "<span style=\"text-align:center;display:block;\"><span style=\"font-size: 60px;line-height: 1.5;font-family: Georgia;color: #FFAB00;\">**Taxis Amarillos New York City**</span></span>"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

@@ -1,0 +1,19 @@
+resources:
+  jobs:
+    TaxiNyc_job:
+      name: TaxiNyc_job
+      tasks:
+        - task_key: TaxiNyc_Pipeline
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.TaxiNyc_Pipeline.id}
+            full_refresh: false
+        - task_key: TaxiNyc_Dashboard
+          depends_on:
+            - task_key: TaxiNyc_Pipeline
+          dashboard_task:
+            subscription: {}
+            warehouse_id: ${var.warehouse_id}
+            dashboard_id: ${resources.dashboards.TaxiNyc_Dashboard.id}
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
