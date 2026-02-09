@@ -1,7 +1,7 @@
 resources:
   jobs:
     TaxiNyc_job:
-      name: TaxiNyc_job
+      name: TaxiNyc_job${var.environment}
       tasks:
         - task_key: TaxiNyc_Pipeline
           pipeline_task:

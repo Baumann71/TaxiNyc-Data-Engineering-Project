@@ -1,6 +1,6 @@
 resources:
   dashboards:
     TaxiNyc_Dashboard:
-        display_name: 'TaxiNyc_Dashboard'
+        display_name: 'TaxiNyc_Dashboard${var.environment}'
         file_path: '../src/dashboards/TaxiNyc_Dashboard.lvdash.json'
         warehouse_id: ${var.warehouse_id}
