@@ -1,9 +1,9 @@
 # TaxiNyc-Data-Engineering-Project
 ### Diseño del Pipeline
-<img width="605" height="259" alt="image" src="https://github.com/user-attachments/assets/8b971ae9-d545-44d4-9ad5-8c961ce3ad70" />
+<img width="625" height="299" alt="image" src="https://github.com/user-attachments/assets/8b971ae9-d545-44d4-9ad5-8c961ce3ad70" />
 
 ### Diseño del Data Lakehouse
-<img width="702" height="534" alt="image" src="https://github.com/user-attachments/assets/93afacbc-9155-4152-942b-f1a1d2ab76b5" />
+<img width="702" height="584" alt="image" src="https://github.com/user-attachments/assets/93afacbc-9155-4152-942b-f1a1d2ab76b5" />
 
 
 ### Dashboard diseñado a partir de los datos:
