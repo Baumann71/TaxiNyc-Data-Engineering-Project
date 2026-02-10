@@ -18,10 +18,5 @@ resources:
         end_date: "2016-03-31"    
         catalog: ${var.catalog}
         
-      environment:
-        dependencies:
-          # We include every dependency defined by pyproject.toml by defining an editable environment
-          # that points to the folder where pyproject.toml is deployed.
-          - --editable ${workspace.file_path}
 
 #1:43:12
